@@ -1,0 +1,88 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: loans
+  datasource:
+    url: jdbc:h2:mem:loansdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+
+  profiles:
+    active:
+      - "prod"
+
+#  rabbitmq:
+#    host: "localhost"
+#    port: 5672
+#    username: "guest"
+#    password: "guest"
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistration: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+  health:
+    readiness:
+      enabled: true
+    liveness:
+      enabled: true
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+
+build:
+  version: "3.0"
+
+info:
+  app: "loans"
+  description: "loans service of banking application"
+  build: "1.00"
+
+logging:
+  level:
+    com:
+      eazybytes:
+        loans: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+
+loans:
+  message: "Welcome to EazyBank loans related local APIs "
+  contactDetails:
+    name: "Amaal Grega - Developer"
+    email: "amaal@eazybank.com"
+  onCallSupport:
+    - (452) 456-2176
+    - (546) 764-8934
+
+

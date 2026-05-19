@@ -1,0 +1,151 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:h2:mem:accountsdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  application:
+    name: accounts
+
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+
+  profiles:
+    active: "qa"
+
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+    function:
+      definition: updateCommunication
+
+    stream:
+      bindings:
+        sendCommunication-out-0:
+          destination: send-communication
+        updateCommunication-in-0:
+          destination: communication-sent
+          group: ${spring.application.name}
+
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
+
+
+#  rabbitmq:
+#    host: "localhost"
+#    port: 5672
+#    username: "guest"
+#    password: "guest"
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  info:
+    env:
+      enabled: true
+
+#  metrics:
+#    tags:
+#      application: ${spring.application.name}
+
+  health:
+    liveness:
+      enabled: true
+    readiness:
+      enabled: true
+
+  endpoint:
+    health:
+      probes:
+        enabled: true
+    shutdown:
+      access: unrestricted
+
+
+
+build:
+  version: 1.0
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10000
+
+
+resilience4j.retry:
+  instances:
+    default:
+      maxAttempts: 3
+      waitDuration: 500
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+      retryExceptions:
+        - java.util.concurrent.TimeoutException
+      ignoreExceptions:
+        - java.lang.NullPointerException
+
+resilience4j.ratelimiter:
+  configs:
+    default:
+      timeoutDuration: 1000
+      limitRefreshPeriod: 5000
+      limitForPeriod: 1
+
+
+logging:
+  level:
+    com:
+      eazybytes:
+        accounts: DEBUG
+
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+
+info:
+  app:
+    name: "accounts"
+    description: "accounts service of banking application"
+    version: "1.00"
+
+accounts:
+  message: "Welcome to EazyBank accounts related local APIs "
+  contactDetails:
+    name: "John Doe - Developer"
+    email: "john@eazybank.com"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 523-1345
+
+
+

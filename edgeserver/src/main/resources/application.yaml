@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: edgeserver
+
+  profiles:
+    active: default
+
+  data:
+    redis:
+      connect-timeout: 2s
+      host: localhost
+      port: 6379
+      timeout: 1s
+
+
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://localhost:7080/realms/master/protocol/openid-connect/certs"
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: false
+              lowerCaseServiceId: true
+          httpclient:
+            connect-timeout: 1000
+            response-timeout: 2s
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  info:
+    env:
+      enabled: true
+
+  endpoint:
+    gateway:
+      access: unrestricted
+
+logging:
+  level:
+    com:
+      eazybytes:
+        cards: DEBUG
+
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10000
+
+
+info:
+  app:
+    name: "edgeserver"
+    description: "edgeserver of the banking application"
+    version: "1.00"

@@ -1,0 +1,100 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: cards
+  datasource:
+    url: jdbc:h2:mem:cardsdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+
+  profiles:
+    active: "qa"
+
+#  rabbitmq:
+#    host: "localhost"
+#    port: 5672
+#    username: "guest"
+#    password: "guest"
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+management:
+  info:
+    env:
+      enabled: true
+
+#  metrics:
+#    tags:
+#      application: ${spring.application.name}
+
+  endpoint:
+    shutdown:
+      access: unrestricted
+
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+    health:
+      liveness:
+        enabled: true
+      readiness:
+        enabled: true
+
+    endpoint:
+      health:
+        probes:
+          enabled: true
+
+
+
+logging:
+  level:
+    com:
+      eazybytes:
+        cards: DEBUG
+
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+build:
+  version: "3.0"
+
+info:
+  app:
+    name: "cards"
+    description: "cards service of the banking application"
+    version: "1.00"
+
+cards:
+  message: "Welcome to EazyBank cards related local APIs "
+  contactDetails:
+    name: "Dragos Lech - Developer"
+    email: "dragos@eazybank.com"
+  onCallSupport:
+    - (412) 419-3491
+    - (915) 382-1932
+
+
