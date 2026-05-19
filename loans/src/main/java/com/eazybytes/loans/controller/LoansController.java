@@ -27,9 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author Eazy Bytes
- */
+
 
 @Tag(
         name = "CRUD REST APIs for Loans in EazyBank",

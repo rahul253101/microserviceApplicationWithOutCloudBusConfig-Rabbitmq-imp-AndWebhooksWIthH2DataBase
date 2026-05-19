@@ -20,9 +20,7 @@ public class LoansServiceImpl implements ILoansService {
 
     private LoansRepository loansRepository;
 
-    /**
-     * @param mobileNumber - Mobile Number of the Customer
-     */
+
     @Override
     public void createLoan(String mobileNumber) {
         Optional<Loans> optionalLoans= loansRepository.findByMobileNumber(mobileNumber);
@@ -32,10 +30,7 @@ public class LoansServiceImpl implements ILoansService {
         loansRepository.save(createNewLoan(mobileNumber));
     }
 
-    /**
-     * @param mobileNumber - Mobile Number of the Customer
-     * @return the new loan details
-     */
+
     private Loans createNewLoan(String mobileNumber) {
         Loans newLoan = new Loans();
         long randomLoanNumber = 100000000000L + new Random().nextInt(900000000);
@@ -48,11 +43,7 @@ public class LoansServiceImpl implements ILoansService {
         return newLoan;
     }
 
-    /**
-     *
-     * @param mobileNumber - Input mobile Number
-     * @return Loan Details based on a given mobileNumber
-     */
+
     @Override
     public LoansDto fetchLoan(String mobileNumber) {
         Loans loans = loansRepository.findByMobileNumber(mobileNumber).orElseThrow(
@@ -61,11 +52,7 @@ public class LoansServiceImpl implements ILoansService {
         return LoansMapper.mapToLoansDto(loans, new LoansDto());
     }
 
-    /**
-     *
-     * @param loansDto - LoansDto Object
-     * @return boolean indicating if the update of loan details is successful or not
-     */
+
     @Override
     public boolean updateLoan(LoansDto loansDto) {
         Loans loans = loansRepository.findByLoanNumber(loansDto.getLoanNumber()).orElseThrow(
@@ -75,10 +62,7 @@ public class LoansServiceImpl implements ILoansService {
         return  true;
     }
 
-    /**
-     * @param mobileNumber - Input MobileNumber
-     * @return boolean indicating if the delete of loan details is successful or not
-     */
+
     @Override
     public boolean deleteLoan(String mobileNumber) {
         Loans loans = loansRepository.findByMobileNumber(mobileNumber).orElseThrow(
