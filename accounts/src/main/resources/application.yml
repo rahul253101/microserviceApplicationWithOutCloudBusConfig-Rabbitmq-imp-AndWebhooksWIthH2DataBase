@@ -40,17 +40,17 @@ spring:
           destination: communication-sent
           group: ${spring.application.name}
 
-      kafka:
-        binder:
-          brokers:
-            - localhost:9092
+      # kafka:
+      #   binder:
+      #     brokers:
+      #       - localhost:9092
 
 
-#  rabbitmq:
-#    host: "localhost"
-#    port: 5672
-#    username: "guest"
-#    password: "guest"
+ rabbitmq:
+   host: "localhost"
+   port: 5672
+   username: "guest"
+   password: "guest"
 
 eureka:
   instance:
